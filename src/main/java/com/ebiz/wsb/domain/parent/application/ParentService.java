@@ -27,27 +27,33 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ParentService {
 
-    private final S3Uploader s3Uploader;
     @Value("${cloud.aws.s3.Object.parent}")
     private String ParentDirName;
+    private final S3Uploader s3Uploader;
     private final ParentRepository parentRepository;
     private final AuthorizationHelper authorizationHelper;
     private final UserDetailsServiceImpl userDetailsService;
     private final ParentMapper parentMapper;
 
+    /**
+     * 학부모 본인을 조회하는 메서드
+     * @return 학부모(본인)에 대한 정보를 DTO로 반환
+     */
     @Transactional
-    public ParentDTO getMyParentInfo() {
+    public ParentDTO getParent() {
         Parent loggedInParent = authorizationHelper.getLoggedInParent();
-
         if (loggedInParent == null) {
             throw new ParentNotFoundException("학부모 정보를 찾을 수 없습니다.");
         }
-
-        return parentMapper.toDTO(loggedInParent);
+        return parentMapper.convertToParentDTO(loggedInParent);
     }
 
-
-
+    /**
+     *
+     * @param parentDTO 학부모 수정할 정보 DTO로 받음
+     * @param imageFile 학부모 업데이트할 사진
+     * @return 수정된 정보 DTO로 반환
+     */
     @Transactional
     public ParentDTO updateParent(ParentDTO parentDTO, MultipartFile imageFile) {
         Parent loggedInParent = authorizationHelper.getLoggedInParent();
@@ -57,33 +63,29 @@ public class ParentService {
             imagePath = s3Uploader.uploadImage(imageFile, ParentDirName);
         }
 
-        Parent updatedParent = parentMapper.fromDTO(parentDTO, loggedInParent, imagePath);
-
-        return parentMapper.toDTO(parentRepository.save(updatedParent));
+        Parent updatedParent = parentMapper.fromDTOToParent(parentDTO, loggedInParent, imagePath);
+        return parentMapper.convertToParentDTO(parentRepository.save(updatedParent));
     }
 
-
+    /**
+     * 학부모 유저 삭제하는 메서드
+     */
     @Transactional
-    public void deleteParent(Long parentId) {
-        Parent existingParent = parentRepository.findById(parentId)
-                .orElseThrow(() -> new ParentNotFoundException("부모 정보를 찾을 수 없습니다."));
-
-        authorizationHelper.validateParentAccess(existingParent, parentId);
-
-        parentRepository.deleteById(parentId);
+    public void deleteParent() {
+        Parent loggedInParent = authorizationHelper.getLoggedInParent();
+        parentRepository.deleteById(loggedInParent.getId());
     }
 
+    /**
+     * 학부모 그룹 탭에서 자신이 속한 그룹 정보를 확인하는 메서드
+     * @return 학부모가 속한 그룹 DTO 반환
+     */
     public GroupDTO getParentGroup() {
-        Object userByContextHolder = userDetailsService.getUserByContextHolder();
-        if (!(userByContextHolder instanceof Parent)) {
-            throw new ParentNotFoundException("학부모 정보를 찾을 수 없습니다.");
-        }
+        Parent loggedInParent = authorizationHelper.getLoggedInParent();
+        Group group = loggedInParent.getGroup();
 
-        Parent parent = (Parent) userByContextHolder;
-
-        Group group = parent.getGroup();
         if (group == null) {
-            throw new GroupNotFoundException("배정된 그룹을 찾을 수 없습니다.");
+            throw new GroupNotFoundException("그룹을 찾을 수 없습니다.");
         }
 
         // 학부모 그룹 탭에서 자신의 그룹에 있는 인솔자 정보 확인하기 위해 DTO 생성
@@ -111,23 +113,17 @@ public class ParentService {
                 .build();
     }
 
-    // 학부모가 운행 탭 들어갈 때, 운행 여부에 대해 알 수 있는 api
+    /**
+     * 학부모가 운행 탭 들어갈 때, 운행 여부에 대해 알 수 있는 메서드
+     * @return
+     */
     public GroupDTO getShuttleStatus() {
-        Object userByContextHolder = userDetailsService.getUserByContextHolder();
-        if(userByContextHolder instanceof Parent) {
-            Parent parent = (Parent) userByContextHolder;
+        Parent loggedInParent = authorizationHelper.getLoggedInParent();
+        Group group = loggedInParent.getGroup();
 
-            Group group = parent.getGroup();
-
-            GroupDTO groupDTO = GroupDTO.builder()
-                    .isGuideActive(group.getIsGuideActive())
-                    .build();
-
-            return groupDTO;
-        } else {
-            throw new ParentNotFoundException("해당 학부모를 찾을 수 없습니다.");
-        }
+        return GroupDTO.builder()
+                .isGuideActive(group.getIsGuideActive())
+                .build();
     }
-
 }
 

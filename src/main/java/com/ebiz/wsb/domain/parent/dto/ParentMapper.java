@@ -3,14 +3,12 @@ package com.ebiz.wsb.domain.parent.dto;
 import com.ebiz.wsb.domain.parent.entity.Parent;
 import com.ebiz.wsb.domain.student.dto.StudentDTO;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class ParentMapper {
 
-    public ParentDTO toDTO(Parent parent) {
+    public ParentDTO convertToParentDTO(Parent parent) {
         return ParentDTO.builder()
                 .id(parent.getId())
                 .name(parent.getName())
@@ -33,7 +31,7 @@ public class ParentMapper {
                 .build();
     }
 
-    public Parent fromDTO(ParentDTO parentDTO, Parent existingParent, String imagePath) {
+    public Parent fromDTOToParent(ParentDTO parentDTO, Parent existingParent, String imagePath) {
         return Parent.builder()
                 .id(existingParent.getId())
                 .name(parentDTO.getName())

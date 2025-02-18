@@ -22,9 +22,7 @@ public class ParentDTO {
     private String email;
     private String address;
     private GroupDTO group;
-
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private String imagePath;
-
     private List<StudentDTO> students;
 }

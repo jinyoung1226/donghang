@@ -22,8 +22,8 @@ public class ParentController {
     private final ParentService parentService;
 
     @GetMapping
-    public ResponseEntity<ParentDTO> getMyParentInfo() {
-        ParentDTO parentInfo = parentService.getMyParentInfo();
+    public ResponseEntity<ParentDTO> getParent() {
+        ParentDTO parentInfo = parentService.getParent();
         return ResponseEntity.ok(parentInfo);
     }
 
@@ -36,10 +36,10 @@ public class ParentController {
         return ResponseEntity.ok(updatedParentDTO);
     }
 
-    @DeleteMapping("/{parentsId}")
-    public ResponseEntity<BaseResponse> deleteParent(@PathVariable Long parentsId) {
-        parentService.deleteParent(parentsId);
-        return ResponseEntity.ok(BaseResponse.builder().message("부모 정보가 삭제되었습니다.").build());
+    @DeleteMapping()
+    public ResponseEntity<BaseResponse> deleteParent() {
+        parentService.deleteParent();
+        return ResponseEntity.ok(BaseResponse.builder().message("학부모 정보가 삭제되었습니다.").build());
     }
 
     @GetMapping("/group")
