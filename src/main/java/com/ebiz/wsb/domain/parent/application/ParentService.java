@@ -5,20 +5,13 @@ import com.ebiz.wsb.domain.group.dto.GroupDTO;
 import com.ebiz.wsb.domain.group.entity.Group;
 import com.ebiz.wsb.domain.group.exception.GroupNotFoundException;
 import com.ebiz.wsb.domain.guardian.dto.GuardianDTO;
-import com.ebiz.wsb.domain.guardian.entity.Guardian;
-import com.ebiz.wsb.domain.guardian.exception.GuardianNotFoundException;
 import com.ebiz.wsb.domain.parent.dto.ParentDTO;
 import com.ebiz.wsb.domain.parent.dto.ParentMapper;
 import com.ebiz.wsb.domain.parent.entity.Parent;
-import com.ebiz.wsb.domain.parent.exception.ParentAccessException;
 import com.ebiz.wsb.domain.parent.exception.ParentNotFoundException;
 import com.ebiz.wsb.domain.parent.repository.ParentRepository;
-import com.ebiz.wsb.domain.student.dto.StudentDTO;
-import com.ebiz.wsb.domain.student.entity.Student;
-import com.ebiz.wsb.domain.student.exception.ImageUploadException;
 import com.ebiz.wsb.global.service.AuthorizationHelper;
-import com.ebiz.wsb.global.service.ImageService;
-import com.ebiz.wsb.global.service.S3Service;
+import com.ebiz.wsb.global.service.S3Uploader;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,13 +27,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ParentService {
 
-    @Value("${cloud.aws.s3.reviewImageBucketName}")
-    private String reviewImageBucketName;
+    private final S3Uploader s3Uploader;
+    @Value("${cloud.aws.s3.Object.parent}")
+    private String ParentDirName;
     private final ParentRepository parentRepository;
     private final AuthorizationHelper authorizationHelper;
     private final UserDetailsServiceImpl userDetailsService;
     private final ParentMapper parentMapper;
-    private final ImageService imageService;
 
     @Transactional
     public ParentDTO getMyParentInfo() {
@@ -62,7 +54,7 @@ public class ParentService {
 
         String imagePath = null;
         if (imageFile != null && !imageFile.isEmpty()) {
-            imagePath = imageService.uploadImage(imageFile, reviewImageBucketName);
+            imagePath = s3Uploader.uploadImage(imageFile, ParentDirName);
         }
 
         Parent updatedParent = parentMapper.fromDTO(parentDTO, loggedInParent, imagePath);

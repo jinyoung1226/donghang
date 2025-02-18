@@ -3,7 +3,6 @@ package com.ebiz.wsb.domain.guardian.api;
 import com.ebiz.wsb.domain.group.dto.GroupDTO;
 import com.ebiz.wsb.domain.guardian.application.GuardianService;
 import com.ebiz.wsb.domain.guardian.dto.GuardianDTO;
-import com.ebiz.wsb.domain.student.dto.StudentUpdateNotesRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,6 @@ public class GuardianController {
     @DeleteMapping
     public ResponseEntity<String> deleteMyGuardianInfo() {
         guardianService.deleteMyGuardianInfo();
-        log.info("Deleted logged-in Guardian information");
         return ResponseEntity.ok("정보가 성공적으로 삭제 되었습니다.");
     }
 

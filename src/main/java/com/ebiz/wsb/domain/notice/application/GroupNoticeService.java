@@ -3,17 +3,13 @@ package com.ebiz.wsb.domain.notice.application;
 import com.ebiz.wsb.domain.auth.application.UserDetailsServiceImpl;
 import com.ebiz.wsb.domain.group.entity.Group;
 import com.ebiz.wsb.domain.group.exception.GroupNotFoundException;
-import com.ebiz.wsb.domain.group.repository.GroupRepository;
 import com.ebiz.wsb.domain.guardian.dto.GuardianSummaryDTO;
 import com.ebiz.wsb.domain.guardian.entity.Guardian;
-import com.ebiz.wsb.domain.guardian.exception.FileUploadException;
 import com.ebiz.wsb.domain.notice.dto.GroupNoticeDTO;
 import com.ebiz.wsb.domain.notice.dto.LikesResponseDTO;
 import com.ebiz.wsb.domain.notice.entity.GroupNotice;
 import com.ebiz.wsb.domain.notice.entity.GroupNoticePhoto;
 import com.ebiz.wsb.domain.notice.entity.Likes;
-import com.ebiz.wsb.domain.notice.exception.LikesNumberException;
-import com.ebiz.wsb.domain.notice.exception.NotNoticeInGroupException;
 import com.ebiz.wsb.domain.notice.exception.NoticeAccessDeniedException;
 import com.ebiz.wsb.domain.notice.exception.NoticeNotFoundException;
 import com.ebiz.wsb.domain.notice.repository.GroupNoticeRepository;
@@ -21,29 +17,23 @@ import com.ebiz.wsb.domain.notice.repository.LikesRepository;
 import com.ebiz.wsb.domain.notification.application.PushNotificationService;
 import com.ebiz.wsb.domain.notification.dto.PushType;
 import com.ebiz.wsb.domain.parent.entity.Parent;
-import com.ebiz.wsb.global.service.S3Service;
 
+import com.ebiz.wsb.global.service.S3Uploader;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.ebiz.wsb.domain.notice.entity.QGroupNotice.groupNotice;
 
 @Service
 @RequiredArgsConstructor
@@ -51,12 +41,11 @@ import static com.ebiz.wsb.domain.notice.entity.QGroupNotice.groupNotice;
 
 public class GroupNoticeService {
 
-    @Value("${cloud.aws.s3.reviewImageBucketName}")
-    private String reviewImageBucketName;
+    @Value("${cloud.aws.s3.Object.groupNotice}")
+    private String GroupNoticeDirName;
     private final GroupNoticeRepository groupNoticeRepository;
-    private final S3Service s3service;
+    private final S3Uploader s3Uploader;
     private final UserDetailsServiceImpl userDetailsService;
-    private final GroupRepository groupRepository;
     private final PushNotificationService pushNotificationService;
     private final LikesRepository likesRepository;
 
@@ -69,7 +58,6 @@ public class GroupNoticeService {
             log.info("그룹 ID {}에 대한 공지사항이 없습니다.", groupId);
             return Page.empty();
         }
-
         return notices.map(this::convertToDTO);
     }
 
@@ -258,14 +246,6 @@ public class GroupNoticeService {
                 .build();
     }
 
-    private String uploadImage(MultipartFile imageFile) {
-        try {
-            return s3service.uploadImageFile(imageFile, reviewImageBucketName);
-        } catch (IOException e) {
-            throw new FileUploadException("이미지 업로드 실패", e);
-        }
-    }
-
     @Transactional
     public LikesResponseDTO toggleLike(Long groupNoticeId) {
         Object currentUser = userDetailsService.getUserByContextHolder();
@@ -347,4 +327,12 @@ public class GroupNoticeService {
         }
     }
 
+    /**
+     *
+     * @param imageFile 업로드 파일
+     * @return 업로드된 파일의 URL
+     */
+    private String uploadImage(MultipartFile imageFile) {
+        return s3Uploader.uploadImage(imageFile, GroupNoticeDirName);
+    }
 }

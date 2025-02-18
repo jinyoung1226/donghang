@@ -16,7 +16,7 @@ import com.ebiz.wsb.domain.student.exception.StudentNotAccessException;
 import com.ebiz.wsb.domain.student.exception.StudentNotFoundException;
 import com.ebiz.wsb.domain.student.repository.StudentRepository;
 import com.ebiz.wsb.global.service.AuthorizationHelper;
-import com.ebiz.wsb.global.service.ImageService;
+import com.ebiz.wsb.global.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,19 +31,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentService {
 
-    @Value("${cloud.aws.s3.reviewImageBucketName}")
-    private String reviewImageBucketName;
+    @Value("${cloud.aws.s3.Object.student}")
+    private String StudentDirName;
     private final StudentRepository studentRepository;
-    private final ImageService imageService;
     private final AuthorizationHelper authorizationHelper;
     private final StudentMapper studentMapper;
     private final UserDetailsServiceImpl userDetailsService;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public StudentDTO createStudent(StudentCreateRequestDTO requestDTO, MultipartFile imageFile) {
         Parent parent = authorizationHelper.getLoggedInParent();
 
-        String imagePath = imageService.uploadImage(imageFile, reviewImageBucketName);
+        String imagePath = s3Uploader.uploadImage(imageFile, StudentDirName);
 
         Student student = Student.builder()
                 .name(requestDTO.getName())
@@ -147,7 +147,7 @@ public class StudentService {
             Parent parent = (Parent) userByContextHolder;
 
             if(parent.getId().equals(parentId)) {
-                String photoUrl = imageService.uploadImage(imageFile, reviewImageBucketName);
+                String photoUrl = s3Uploader.uploadImage(imageFile, StudentDirName);
                 Student updateStudent = existingStudent.toBuilder()
                         .imagePath(photoUrl)
                         .build();
@@ -169,9 +169,10 @@ public class StudentService {
         authorizationHelper.validateParentAccess(student.getParent(), parent.getId());
 
         if (student.getImagePath() != null) {
-            imageService.deleteImage(student.getImagePath(), reviewImageBucketName);
+            String imageUrl = student.getImagePath();
+            String fileKey = imageUrl.substring(imageUrl.indexOf("b-cube-web")); // 키만 뽑아내기
+            s3Uploader.deleteFile(fileKey);
         }
-
         studentRepository.delete(student);
     }
 
