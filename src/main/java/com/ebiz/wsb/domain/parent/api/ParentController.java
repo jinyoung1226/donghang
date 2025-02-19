@@ -27,6 +27,18 @@ public class ParentController {
         return ResponseEntity.ok(parentInfo);
     }
 
+    @GetMapping("/group")
+    public ResponseEntity<GroupDTO> getParentGroup() {
+        GroupDTO group = parentService.getParentGroup();
+        return new ResponseEntity<>(group, HttpStatus.OK);
+    }
+
+    @GetMapping("/shuttle-status")
+    public ResponseEntity<GroupDTO> getShuttleStatus() {
+        GroupDTO shuttleStatus = parentService.getShuttleStatus();
+        return ResponseEntity.ok(shuttleStatus);
+    }
+
     @PutMapping
     public ResponseEntity<ParentDTO> updateParent(
             @RequestBody ParentDTO parentDTO,
@@ -40,17 +52,5 @@ public class ParentController {
     public ResponseEntity<BaseResponse> deleteParent() {
         parentService.deleteParent();
         return ResponseEntity.ok(BaseResponse.builder().message("학부모 정보가 삭제되었습니다.").build());
-    }
-
-    @GetMapping("/group")
-    public ResponseEntity<GroupDTO> getParentGroup() {
-        GroupDTO group = parentService.getParentGroup();
-        return new ResponseEntity<>(group, HttpStatus.OK);
-    }
-
-    @GetMapping("/shuttle-status")
-    public ResponseEntity<GroupDTO> getShuttleStatus() {
-        GroupDTO shuttleStatus = parentService.getShuttleStatus();
-        return ResponseEntity.ok(shuttleStatus);
     }
 }
