@@ -10,6 +10,8 @@ import com.ebiz.wsb.domain.parent.exception.ParentNotFoundException;
 import com.ebiz.wsb.domain.student.exception.StudentNotAccessException;
 import com.ebiz.wsb.domain.student.exception.StudentNotFoundException;
 import com.ebiz.wsb.domain.token.exception.InvalidTokenException;
+import com.ebiz.wsb.domain.waypoint.exception.IncompletePreviousWaypointException;
+import com.ebiz.wsb.domain.waypoint.exception.WaypointAttendanceCompletionException;
 import com.ebiz.wsb.domain.waypoint.exception.WaypointNotFoundException;
 import com.ebiz.wsb.global.dto.ErrorResponse;
 import com.ebiz.wsb.global.exception.InvalidUserTypeException;
@@ -193,7 +195,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ParentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> ParentNotFoundException(ParentNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleParentNotFoundException(ParentNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse.builder()
@@ -226,5 +228,17 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .message(ex.getMessage())
                         .build());
+    }
+
+    @ExceptionHandler(WaypointAttendanceCompletionException.class)
+    public ResponseEntity<?> handleWaypointAttendanceCompletionException(WaypointAttendanceCompletionException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder().message(e.getMessage()).build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IncompletePreviousWaypointException.class)
+    public ResponseEntity<?> handleIncompletePreviousWaypointException(IncompletePreviousWaypointException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder().message(e.getMessage()).build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
