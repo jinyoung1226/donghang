@@ -16,6 +16,24 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    @GetMapping()
+    public ResponseEntity<StudentDTO> getStudentsByGuardian(@PathVariable Long studentId) {
+        StudentDTO studentDTO = studentService.getStudentsByGuardian(studentId);
+        return ResponseEntity.ok(studentDTO);
+    }
+
+    @GetMapping()
+    public ResponseEntity<StudentDTO> getStudentsByParent(@PathVariable Long studentId) {
+        StudentDTO studentDTO = studentService.getStudentsByParent(studentId);
+        return ResponseEntity.ok(studentDTO);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<StudentDTO>> getAllStudents() {
+        List<StudentDTO> students = studentService.getAllStudents();
+        return ResponseEntity.ok(students);
+    }
+
     @PostMapping
     public ResponseEntity<StudentDTO> createStudent(
             @RequestParam("name") String name,
@@ -24,31 +42,9 @@ public class StudentController {
             @RequestParam("notes") String notes,
             @RequestParam("parentPhone") String parentPhone,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
-
-        StudentCreateRequestDTO studentCreateRequestDTO = StudentCreateRequestDTO.builder()
-                .name(name)
-                .schoolName(schoolName)
-                .grade(grade)
-                .notes(notes)
-                .parentPhone(parentPhone)
-                .build();
-
-        StudentDTO createdStudent = studentService.createStudent(studentCreateRequestDTO, imageFile);
+        StudentDTO createdStudent = studentService.createStudent(name, schoolName, grade, notes, parentPhone, imageFile);
         return ResponseEntity.ok(createdStudent);
     }
-
-    @GetMapping
-    public ResponseEntity<List<StudentDTO>> getAllStudents() {
-        List<StudentDTO> students = studentService.getAllStudents();
-        return ResponseEntity.ok(students);
-    }
-
-    @GetMapping("/{studentId}")
-    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long studentId) {
-        StudentDTO studentDTO = studentService.getStudentById(studentId);
-        return ResponseEntity.ok(studentDTO);
-    }
-
 
     @PatchMapping("/update/notes")
     public ResponseEntity<Void> updateStudentNote(@RequestBody StudentUpdateNotesRequestDTO studentUpdateNotesRequestDTO) {
@@ -57,8 +53,8 @@ public class StudentController {
     }
 
     @PatchMapping("/update/imageFile")
-    public ResponseEntity<Void> updateStudentImageFile(@RequestPart(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam("studentId") Long studentId) {
-        studentService.updateStudentImageFile(imageFile, studentId);
+    public ResponseEntity<Void> updateStudentImage(@RequestPart(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam("studentId") Long studentId) {
+        studentService.updateStudentImage(imageFile, studentId);
         return ResponseEntity.ok().build();
     }
 
