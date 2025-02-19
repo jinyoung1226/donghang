@@ -187,30 +187,22 @@ public class GroupService {
                 .build();
     }
 
-//    /**
-//     * 그룹 이미지를 업데이트 하는 메서드
-//     * @param imageFile 그룹 이미지 파일
-//     * @param groupId 그룹 Id
-//     */
-//    public void updateGroupImage(MultipartFile imageFile, Long groupId) {
-//        Group existingGroup = groupRepository.findById(groupId)
-//                .orElseThrow(() -> new GroupNotFoundException("그룹 정보를 찾을 수 없습니다."));
-//
-//        String photoUrl = s3Uploader.uploadImage(imageFile, GroupDirName);
-//        Group updateGroup = existingGroup.toBuilder()
-//                .groupImage(photoUrl)
-//                .build();
-//
-//        if (loggedInGuardian.getImagePath() != null) {
-//            try {
-//                String imageUrl = loggedInGuardian.getImagePath();
-//                String fileKey = imageUrl.substring(imageUrl.indexOf("b-cube-web")); // 키만 뽑아내기
-//                s3Uploader.deleteFile(fileKey);
-//            } catch (Exception e) {
-//                log.error("S3 파일 삭제 실패: {}", e.getMessage());
-//            }
-//        }
-//
-//        groupRepository.save(updateGroup);
-//    }
+    /**
+     * 그룹 이미지를 업데이트 하는 메서드
+     * @param imageFile 그룹 이미지 파일
+     * @param groupId 그룹 Id
+     */
+    public void updateGroupImage(MultipartFile imageFile, Long groupId) {
+        Group existingGroup = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupNotFoundException("그룹 정보를 찾을 수 없습니다."));
+
+        String photoUrl = s3Uploader.uploadImage(imageFile, GroupDirName);
+        Group updateGroup = existingGroup.toBuilder()
+                .groupImage(photoUrl)
+                .build();
+
+        // ******** 이 파트 사용자 인증 코드 넣어야 함 ********* //
+
+        groupRepository.save(updateGroup);
+    }
 }
