@@ -85,7 +85,7 @@ public class StudentService {
         if (currentUser instanceof Guardian guardian) {
             Group group = guardian.getGroup();
             if (group == null) {
-                throw new GroupNotFoundException("배정된 그룹이 없습니다.");
+                throw new GroupNotFoundException("그룹 정보를 찾을 수 없습니다.");
             }
             List<Student> students = studentRepository.findAllByGroupId(group.getId());
             return students.stream()

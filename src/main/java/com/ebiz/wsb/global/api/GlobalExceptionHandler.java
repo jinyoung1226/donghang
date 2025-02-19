@@ -184,11 +184,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            GroupAlreadyActiveException.class,
-            GroupNotAccessException.class,
-            GuideNotOnDutyException.class,
-    })
+    @ExceptionHandler({GroupAlreadyActiveException.class,GuideNotOnDutyException.class})
     @ResponseBody
     public String handleBadRequestExceptions(RuntimeException ex) {
         return ex.getMessage();

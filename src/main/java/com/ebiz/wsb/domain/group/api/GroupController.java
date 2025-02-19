@@ -2,7 +2,6 @@ package com.ebiz.wsb.domain.group.api;
 
 import com.ebiz.wsb.domain.group.application.GroupService;
 import com.ebiz.wsb.domain.group.dto.GroupDTO;
-import com.ebiz.wsb.domain.student.dto.StudentUpdateNotesRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class GroupController {
 
     private final GroupService groupService;
+
+    @GetMapping("/guide-status")
+    public ResponseEntity<GroupDTO> getGuideStatus() {
+        GroupDTO guideStatus = groupService.getGuideStatus();
+        return ResponseEntity.ok(guideStatus);
+    }
 
     // 출근하기 (인솔자가 "출근하기" 누르면 누른 인솔자 ID로 그룹 출근 상태 업데이트)
     @PostMapping("/start-guide")
@@ -29,15 +34,9 @@ public class GroupController {
         return ResponseEntity.ok(groupDTO);
     }
 
-    @GetMapping("/guide-status")
-    public ResponseEntity<GroupDTO> getGuideStatus() {
-        GroupDTO guideStatus = groupService.getGuideStatus();
-        return ResponseEntity.ok(guideStatus);
-    }
-
     @PatchMapping("/update/image")
-    public ResponseEntity<Void> updateStudentImage(@RequestPart MultipartFile imageFile, @RequestPart Long groupId ) {
-        groupService.updateStudentImage(imageFile, groupId);
+    public ResponseEntity<Void> updateGroupImage(@RequestPart MultipartFile imageFile, @RequestPart Long groupId ) {
+        groupService.updateGroupImage(imageFile, groupId);
         return ResponseEntity.ok().build();
     }
 }
