@@ -4,8 +4,6 @@ import com.ebiz.wsb.domain.group.exception.GroupAlreadyActiveException;
 import com.ebiz.wsb.domain.group.exception.GroupNotAccessException;
 import com.ebiz.wsb.domain.group.exception.GuideNotOnDutyException;
 import com.ebiz.wsb.domain.group.exception.GuideNotStartedException;
-import com.ebiz.wsb.domain.guardian.exception.FileUploadException;
-import com.ebiz.wsb.domain.guardian.exception.GuardianNotAccessException;
 import com.ebiz.wsb.domain.guardian.exception.GuardianNotFoundException;
 import com.ebiz.wsb.domain.location.exception.InvalidLocationDataException;
 import com.ebiz.wsb.domain.mail.exception.InvalidMailException;
@@ -13,12 +11,10 @@ import com.ebiz.wsb.domain.message.exception.MessageAccessException;
 import com.ebiz.wsb.domain.notice.exception.*;
 import com.ebiz.wsb.domain.parent.exception.ParentAccessException;
 import com.ebiz.wsb.domain.parent.exception.ParentNotFoundException;
-import com.ebiz.wsb.domain.schedule.exception.ScheduleAccessException;
 import com.ebiz.wsb.domain.student.exception.StudentNotAccessException;
 import com.ebiz.wsb.domain.student.exception.StudentNotFoundException;
 import com.ebiz.wsb.domain.token.exception.InvalidTokenException;
 import com.ebiz.wsb.domain.waypoint.exception.WaypointNotFoundException;
-import com.ebiz.wsb.global.dto.BaseResponse;
 import com.ebiz.wsb.global.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,7 +26,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.io.IOException;
@@ -105,15 +100,6 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ErrorResponse> handleFileUploadException(FileUploadException ex){
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponse.builder()
-                        .message(ex.getMessage())
-                        .build());
-    }
-
     @ExceptionHandler(InvalidMailException.class)
     public ResponseEntity<ErrorResponse> handleInvalidMailException(InvalidMailException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -133,12 +119,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(java.nio.file.AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(java.nio.file.AccessDeniedException ex){
         return new ResponseEntity<>("접근이 거부되었습니다." + ex.getMessage(), HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(ScheduleAccessException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleScheduleAccessException(ScheduleAccessException ex) {
-        return ex.getMessage();
     }
 
     @ExceptionHandler(LikesNumberException.class)
