@@ -2,7 +2,6 @@ package com.ebiz.wsb.global.api;
 
 import com.ebiz.wsb.domain.group.exception.*;
 import com.ebiz.wsb.domain.guardian.exception.GuardianNotFoundException;
-import com.ebiz.wsb.domain.location.exception.InvalidLocationDataException;
 import com.ebiz.wsb.domain.mail.exception.InvalidMailException;
 import com.ebiz.wsb.domain.message.exception.MessageAccessException;
 import com.ebiz.wsb.domain.notice.exception.*;
@@ -86,15 +85,6 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ErrorResponse.builder().
                         message("유효하지 않은 토큰입니다.")
-                        .build());
-    }
-
-    @ExceptionHandler(InvalidLocationDataException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidLocationDataException(InvalidLocationDataException ex){
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.builder()
-                        .message("잘못된 위치 데이터입니다.")
                         .build());
     }
 
