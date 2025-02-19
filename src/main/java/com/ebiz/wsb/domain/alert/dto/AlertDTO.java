@@ -20,14 +20,4 @@ public class AlertDTO {
     private UserType userType;
     private boolean isRead;
 
-//    public static AlertDTO from(Alert alert) {
-//        return AlertDTO.builder()
-//                .id(alert.getId())
-//                .title(alert.getTitle())
-//                .content(alert.getContent())
-//                .category(alert.getAlertCategory().toString())
-//                .createdAt(alert.getCreatedAt())
-//                .isRead(alert.isRead())
-//                .build();
-//    }
 }
