@@ -30,8 +30,6 @@ public class MessageController {
     public ResponseEntity<List<MessageDTO>> getMessagesForGuardian(@PathVariable Long studentId) {
         try {
             List<MessageDTO> messagesForGuardian = messageService.getMessagesForGuardian(studentId);
-
-            // 비어있어도 빈 리스트 반환
             return ResponseEntity.ok(messagesForGuardian);
         } catch (GuardianNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

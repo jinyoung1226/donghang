@@ -3,9 +3,7 @@ package com.ebiz.wsb.global.api;
 import com.ebiz.wsb.domain.group.exception.*;
 import com.ebiz.wsb.domain.guardian.exception.GuardianNotFoundException;
 import com.ebiz.wsb.domain.mail.exception.InvalidMailException;
-import com.ebiz.wsb.domain.message.exception.MessageAccessException;
 import com.ebiz.wsb.domain.notice.exception.*;
-import com.ebiz.wsb.domain.parent.exception.ParentAccessException;
 import com.ebiz.wsb.domain.parent.exception.ParentNotFoundException;
 import com.ebiz.wsb.domain.student.exception.StudentNotAccessException;
 import com.ebiz.wsb.domain.student.exception.StudentNotFoundException;
@@ -174,15 +172,6 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(ParentAccessException.class)
-    public ResponseEntity<ErrorResponse> handleParentAccessException(ParentAccessException ex) {
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(ErrorResponse.builder()
-                        .message(ex.getMessage())
-                        .build());
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({GroupAlreadyActiveException.class,GuideNotOnDutyException.class})
     @ResponseBody
@@ -194,15 +183,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleParentNotFoundException(ParentNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ErrorResponse.builder()
-                        .message(ex.getMessage())
-                        .build());
-    }
-
-    @ExceptionHandler(MessageAccessException.class)
-    public ResponseEntity<ErrorResponse> MesssageAccessException(MessageAccessException ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.builder()
                         .message(ex.getMessage())
                         .build());

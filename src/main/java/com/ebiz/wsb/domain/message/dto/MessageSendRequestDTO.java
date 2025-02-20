@@ -12,8 +12,9 @@ import javax.annotation.Nullable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageSendRequestDTO {
-    private Long studentId;
 
+    private Long studentId;
     @Nullable
     private String content;
+
 }
