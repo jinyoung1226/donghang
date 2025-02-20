@@ -27,8 +27,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.io.IOException;
 
-// 특정 Exception 발생 시 해당 응답을 반환해 에러 메시지를 클라이언트한테 반환
-
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
