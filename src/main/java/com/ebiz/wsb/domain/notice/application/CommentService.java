@@ -3,7 +3,6 @@ package com.ebiz.wsb.domain.notice.application;
 import com.ebiz.wsb.domain.auth.application.UserDetailsServiceImpl;
 import com.ebiz.wsb.domain.guardian.entity.Guardian;
 import com.ebiz.wsb.domain.notice.dto.CommentDTO;
-import com.ebiz.wsb.domain.notice.dto.GroupNoticeDTO;
 import com.ebiz.wsb.domain.notice.entity.Comment;
 import com.ebiz.wsb.domain.notice.entity.GroupNotice;
 import com.ebiz.wsb.domain.notice.exception.CommentAccessDeniedException;

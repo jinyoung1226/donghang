@@ -24,29 +24,22 @@ public class GroupNoticeController {
 
     private final GroupNoticeService groupNoticeService;
     private final CommentService commentService;
+
     @GetMapping("/group/notices")
-    public ResponseEntity<Page<GroupNoticeDTO>> getAllGroupNotices(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
-    ) {
+    public ResponseEntity<Page<GroupNoticeDTO>> getAllGroupNotices(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<GroupNoticeDTO> groupNotices = groupNoticeService.getAllGroupNotices(pageable);
         return ResponseEntity.ok(groupNotices);
     }
 
     @GetMapping("/group/notice/{groupNoticeId}")
-    public ResponseEntity<GroupNoticeDTO> getGroupNoticeByGroupNoticeId(
-            @PathVariable Long groupNoticeId
-    ) {
-        GroupNoticeDTO groupNotice = groupNoticeService.getGroupNoticeByGroupNoticeId(groupNoticeId);  // 수정된 메서드 호출
+    public ResponseEntity<GroupNoticeDTO> getGroupNoticeOne(@PathVariable Long groupNoticeId) {
+        GroupNoticeDTO groupNotice = groupNoticeService.getGroupNoticeOne(groupNoticeId);
         return ResponseEntity.ok(groupNotice);
     }
 
     @PostMapping
-    public ResponseEntity<GroupNoticeDTO> createGroupNotice(
-            @RequestParam("content") String content,
-            @RequestPart(value = "photos", required = false) List<MultipartFile> photos
-    ) {
+    public ResponseEntity<GroupNoticeDTO> createGroupNotice(@RequestParam("content") String content, @RequestPart(value = "photos", required = false) List<MultipartFile> photos) {
         GroupNoticeDTO createdGroupNotice = groupNoticeService.createGroupNotice(content, photos);
         return new ResponseEntity<>(createdGroupNotice, HttpStatus.CREATED);
     }

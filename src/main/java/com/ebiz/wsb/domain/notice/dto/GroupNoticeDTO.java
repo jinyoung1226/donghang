@@ -1,7 +1,6 @@
 package com.ebiz.wsb.domain.notice.dto;
 
 
-import com.ebiz.wsb.domain.guardian.dto.GuardianDTO;
 import com.ebiz.wsb.domain.guardian.dto.GuardianSummaryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
