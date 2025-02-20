@@ -55,6 +55,10 @@ public class PushNotificationService {
     private static final String FCM_SEND_URL = "https://fcm.googleapis.com/v1/projects/%s/messages:send";
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
 
+
+    /**
+     * fcm 푸시 메시지를 전송하는 메서드
+     */
     public void sendPushMessage(String title, String body, Map<String, String> data, String token)
             throws IOException {
         String message = makeMessage(title, body, data, token);
@@ -70,7 +74,9 @@ public class PushNotificationService {
         response.close();
     }
 
-
+    /**
+     * FCM 메시지 본문을 JSON 문자열로 생성하는 메서드
+     */
     private String makeMessage(String title, String body, Map<String, String> data, String token)
             throws JsonProcessingException {
         AndroidNotificationDTO android = new AndroidNotificationDTO();
@@ -94,6 +100,9 @@ public class PushNotificationService {
         return objectMapper.writeValueAsString(fcmMessage);
     }
 
+    /**
+     * Firebase Access Token을 가져오는 메서드
+     */
     private String getAccessToken() throws IOException {
 
         String firebaseConfigPath = System.getenv("FIREBASE_CONFIG_PATH");
@@ -110,7 +119,9 @@ public class PushNotificationService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
-
+    /**
+     * FCM 토큰을 저장하는 메서드
+     */
     public void save(String token) {
         Object user = userDetailsService.getUserByContextHolder();
 
@@ -130,46 +141,9 @@ public class PushNotificationService {
         fcmTokenRepository.save(fcmToken);
     }
 
-    // 관리자 공지사항과 스케쥴 등록 때 사용
-    public void sendPushNotificationToGroup(Long groupId, String title, String body, PushType pushType) {
-
-        List<Parent> parents = parentRepository.findByGroupId(groupId);
-        List<Guardian> guardians = guardianRepository.findByGroupId(groupId);
-
-        List<String> fcmTokens = new ArrayList<>();
-
-        for (Parent parent : parents) {
-            List<FcmToken> parentTokens = fcmTokenRepository.findByUserIdAndUserType(parent.getId(), UserType.PARENT);
-            parentTokens.forEach(token -> fcmTokens.add(token.getToken()));
-        }
-
-        for (Guardian guardian : guardians) {
-            List<FcmToken> guardianTokens = fcmTokenRepository.findByUserIdAndUserType(guardian.getId(), UserType.GUARDIAN);
-            guardianTokens.forEach(token -> fcmTokens.add(token.getToken()));
-        }
-
-        Map<String, String> data = createPushData(pushType);
-
-        for (String token : fcmTokens) {
-            Long userId = fcmTokenRepository.findByToken(token)
-                    .map(FcmToken::getUserId)
-                    .orElse(null);
-
-            if (userId != null) {
-                try {
-                    sendPushMessage(title, body, data, token);
-                } catch (IOException e) {
-                    log.error("푸시 메시지 전송 실패: token={} / error: {}", token, e.getMessage());
-                } catch (Exception e) {
-                    log.error("Alert 저장 실패 또는 예외 발생: userId={}, error: {}", userId, e.getMessage());
-                }
-            } else {
-                log.warn("유효하지 않은 토큰으로 알림 전송 시도: token={}", token);
-            }
-        }
-    }
-
-    // 출근하기
+    /**
+     * '출근하기' 푸시 알림을 학부모와 지도사에게 전송하는 메서드 (서로 다른 메시지 내용)
+     */
     public void sendStartGuidePushNotificationToGroupDifferentMessage(Long groupId, String parentTitle, String parentBody, String guardianTitle, String guardianBody, PushType parentPushType, PushType guardianPushType) {
 
         List<Parent> parents = parentRepository.findByGroupId(groupId);
@@ -231,7 +205,9 @@ public class PushNotificationService {
         }
     }
 
-    // 퇴근하기
+    /**
+     * '퇴근하기' 푸시 알림을 학부모와 지도사에게 전송하는 메서드 (서로 다른 메시지 내용)
+     */
     public void sendStopGuidePushNotificationToGroupDifferentMessage(Long groupId, String parentTitle, String parentBody, String pushParentTitle, String pushParentBody, String guardianTitle, String guardianBody, PushType parentPushType, PushType guardianPushType) {
 
         List<Parent> parents = parentRepository.findByGroupId(groupId);
@@ -295,6 +271,9 @@ public class PushNotificationService {
         }
     }
 
+    /**
+     * 지도사 그룹 전체에게 푸시 알림을 전송하는 메서드
+     */
     public void sendPushNotificationToGuardians(Long groupId, String pushTitle, String pushBody, String alarmTitle, String alarmBody, PushType pushType){
         List<Guardian> guardians = guardianRepository.findByGroupId(groupId);
 
@@ -328,6 +307,10 @@ public class PushNotificationService {
         }
     }
 
+
+    /**
+     * 학부모 전체에게 푸시 알림을 전송하는 메서드
+     */
     public void sendPushNotificationToParents(Long groupId, String pushTitle, String pushBody, String alarmTitle, String alarmBody, PushType pushType) {
         List<Parent> parents = parentRepository.findByGroupId(groupId);
 
@@ -361,6 +344,9 @@ public class PushNotificationService {
         }
     }
 
+    /**
+     * 특정 경유지에 있는 학생들의 학부모에게 푸시 알림을 전송하는 메서드
+     */
     public void sendPushNotificationToParentsAtWaypoint(Long waypointId, String pushTitle, String pushBody, String alarmTitle, String alarmBody, PushType pushType) {
         List<Student> students = studentRepository.findByWaypointId(waypointId);
         List<Long> parentIds = new ArrayList<>();
@@ -402,7 +388,9 @@ public class PushNotificationService {
         }
     }
 
-
+    /**
+     * PushType에 맞는 데이터(Map<String, String>)를 생성하는 메서드
+     */
     public Map<String, String> createPushData(PushType pushType) {
         Map<String, String> data = new HashMap<>();
 
@@ -471,10 +459,12 @@ public class PushNotificationService {
                 data.put("title", "일반 공지");
                 data.put("body", "일반 공지사항입니다.");
         }
-
         return data;
     }
 
+    /**
+     * PushType에 맞는 AlertCategory를 반환하는 메서드
+     */
     private Alert.AlertCategory mapPushTypeToAlertCategory(PushType pushType) {
         switch (pushType) {
             case POST:

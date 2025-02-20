@@ -1,8 +1,6 @@
 package com.ebiz.wsb.domain.notification.api;
 
 
-import com.ebiz.wsb.domain.alert.application.AlertService;
-import com.ebiz.wsb.domain.alert.entity.Alert;
 import com.ebiz.wsb.domain.notification.application.PushNotificationService;
 import com.ebiz.wsb.domain.notification.dto.PushRequest;
 import com.ebiz.wsb.domain.notification.dto.PushType;
@@ -11,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
