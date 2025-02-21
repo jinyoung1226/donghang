@@ -3,7 +3,7 @@ pipeline {
 
 	environment {
         IMAGE_NAME = 'jinyoung1226/donghang-back'
-        DEPLOY_DIR = 'cd /home/jinyoung/donghang'
+        DEPLOY_DIR = '/home/jinyoung/donghang'
     }
 
 	stages {
