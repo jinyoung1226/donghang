@@ -125,7 +125,7 @@ public class StudentService {
                 .notes(notes)
                 .imagePath(imagePath)
                 .parent(parent)
-                .ParentPhone(parentPhone)
+                .parentPhone(parentPhone)
                 .build();
 
         studentRepository.save(student);

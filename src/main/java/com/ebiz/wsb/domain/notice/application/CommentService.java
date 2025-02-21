@@ -92,7 +92,7 @@ public class CommentService {
 
     private CommentDTO convertToDTO(Comment comment) {
         CommentDTO.CommentDTOBuilder builder = CommentDTO.builder()
-                .commentId(comment.getCommentId())
+                .commentId(comment.getId())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt());
 

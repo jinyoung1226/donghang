@@ -18,13 +18,12 @@ import org.hibernate.annotations.DynamicInsert;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicInsert
-@Table(name = "StudentProfile")
+@Table(name = "Student")
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
-    private Long studentId;
-
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -42,7 +41,7 @@ public class Student {
     private String imagePath;
 
     @Column(name = "parent_phone")
-    private String ParentPhone;
+    private String parentPhone;
 
     @ManyToOne
     @JoinColumn(name = "group_id")

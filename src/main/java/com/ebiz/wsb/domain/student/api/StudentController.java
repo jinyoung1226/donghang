@@ -16,13 +16,13 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @GetMapping()
+    @GetMapping("/guardian")
     public ResponseEntity<StudentDTO> getStudentsByGuardian(@PathVariable Long studentId) {
         StudentDTO studentDTO = studentService.getStudentsByGuardian(studentId);
         return ResponseEntity.ok(studentDTO);
     }
 
-    @GetMapping()
+    @GetMapping("/parent")
     public ResponseEntity<StudentDTO> getStudentsByParent(@PathVariable Long studentId) {
         StudentDTO studentDTO = studentService.getStudentsByParent(studentId);
         return ResponseEntity.ok(studentDTO);

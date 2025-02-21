@@ -16,6 +16,7 @@ public class GroupNoticePhoto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "GroupNoticePhoto_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

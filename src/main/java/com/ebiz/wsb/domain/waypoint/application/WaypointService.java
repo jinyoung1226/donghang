@@ -119,7 +119,7 @@ public class WaypointService {
     // DTO 변환 로직만을 처리하는 메서드
     private StudentDTO convertToStudentDTO(Student student, Attendance attendance) {
         return StudentDTO.builder()
-                .studentId(student.getStudentId())
+                .studentId(student.getId())
                 .name(student.getName())
                 .schoolName(student.getSchoolName())
                 .parentPhone(student.getParentPhone())

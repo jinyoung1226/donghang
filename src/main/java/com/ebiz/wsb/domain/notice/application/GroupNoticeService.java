@@ -188,7 +188,7 @@ public class GroupNoticeService {
         }
 
         existingGroupNotice = GroupNotice.builder()
-                .groupNoticeId(existingGroupNotice.getGroupNoticeId())
+                .id(existingGroupNotice.getId())
                 .guardian(existingGroupNotice.getGuardian())
                 .group(existingGroupNotice.getGroup())
                 .content(content)
@@ -303,7 +303,7 @@ public class GroupNoticeService {
                 .build();
 
         return GroupNoticeDTO.builder()
-                .groupNoticeId(groupNotice.getGroupNoticeId())
+                .groupNoticeId(groupNotice.getId())
                 .content(groupNotice.getContent())
                 .photos(photoUrls)
                 .likes(groupNotice.getLikes())

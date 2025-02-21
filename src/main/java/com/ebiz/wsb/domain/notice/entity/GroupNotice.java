@@ -27,7 +27,7 @@ public class GroupNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_notice_id")
-    private Long groupNoticeId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guardian_id", nullable = false)
@@ -49,15 +49,5 @@ public class GroupNotice {
 
     @OneToMany(mappedBy = "groupNotice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<GroupNoticePhoto> photos = new ArrayList<>();
-
-    public void incrementLikes(){
-        this.likes++;
-    }
-
-    public void decrementLikes(){
-        if(this.likes > 0){
-            this.likes--;
-        }
-    }
 
 }

@@ -1,6 +1,5 @@
 package com.ebiz.wsb.domain.auth.dto;
 
-import com.ebiz.wsb.domain.notification.entity.UserType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

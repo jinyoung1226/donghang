@@ -19,7 +19,7 @@ public class ParentMapper {
                 .students(
                         parent.getStudents().stream()
                                 .map(student -> StudentDTO.builder()
-                                        .studentId(student.getStudentId())
+                                        .studentId(student.getId())
                                         .name(student.getName())
                                         .schoolName(student.getSchoolName())
                                         .grade(student.getGrade())

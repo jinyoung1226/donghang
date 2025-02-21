@@ -123,8 +123,8 @@ public class AttendanceService {
         Attendance save = attendanceRepository.save(updatedAttendance);
 
         AttendanceDTO attendanceDTO = AttendanceDTO.builder()
-                .attendanceId(save.getAttendanceId())
-                .studentId(save.getStudent().getStudentId())
+                .attendanceId(save.getId())
+                .studentId(save.getStudent().getId())
                 .waypointId(save.getWaypoint().getId())
                 .attendanceDate(save.getAttendanceDate())
                 .attendanceStatus(save.getAttendanceStatus())

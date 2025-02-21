@@ -48,7 +48,7 @@ public class NoticeService {
         return noticeRepository.findById(noticeId)
                 .map(existingNotice -> {
                     Notice updatedNotice = Notice.builder()
-                            .noticeId(existingNotice.getNoticeId())
+                            .id(existingNotice.getId())
                             .title(updatedNoticeDTO.getTitle())
                             .content(updatedNoticeDTO.getContent())
                             .createdAt(existingNotice.getCreatedAt())
@@ -65,7 +65,7 @@ public class NoticeService {
 
     private NoticeDTO convertToDTO(Notice notice) {
         return NoticeDTO.builder()
-                .noticeId(notice.getNoticeId())
+                .noticeId(notice.getId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
                 .createdAt(notice.getCreatedAt())
@@ -74,7 +74,7 @@ public class NoticeService {
 
     private Notice convertToEntity(NoticeDTO noticeDTO) {
         return Notice.builder()
-                .noticeId(noticeDTO.getNoticeId())
+                .id(noticeDTO.getNoticeId())
                 .title(noticeDTO.getTitle())
                 .content(noticeDTO.getContent())
                 .createdAt(noticeDTO.getCreatedAt())

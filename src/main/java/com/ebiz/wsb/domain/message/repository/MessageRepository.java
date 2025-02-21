@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByStudent_StudentIdAndGuardian_Id(Long studentId, Long guardianId);
+    List<Message> findByStudent_IdAndGuardian_Id(Long studentId, Long guardianId);
 
 }

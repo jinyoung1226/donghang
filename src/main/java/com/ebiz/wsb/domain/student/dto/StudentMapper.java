@@ -8,7 +8,7 @@ public class StudentMapper {
 
     public StudentDTO convertToStudentDTO(Student student, boolean includeGroupAndWaypoint) {
         StudentDTO.StudentDTOBuilder builder = StudentDTO.builder()
-                .studentId(student.getStudentId())
+                .studentId(student.getId())
                 .name(student.getName())
                 .schoolName(student.getSchoolName())
                 .grade(student.getGrade())

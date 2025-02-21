@@ -23,7 +23,7 @@ public class Parent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "parent_id")
     private Long id;
 
     @Column(name = "name")

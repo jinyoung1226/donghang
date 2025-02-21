@@ -138,7 +138,7 @@ public class MessageService {
         }
 
         // 학생과 지도사와 관련된 메시지 조회
-        List<Message> messages = messageRepository.findByStudent_StudentIdAndGuardian_Id(studentId, loggedInGuardian.getId());
+        List<Message> messages = messageRepository.findByStudent_IdAndGuardian_Id(studentId, loggedInGuardian.getId());
 
         // 메시지가 없으면 빈 리스트 반환
         if (messages.isEmpty()) {
@@ -157,7 +157,7 @@ public class MessageService {
                 unreadMessages.add(message);
             }
             messageDTOs.add(MessageDTO.builder()
-                    .messageId(message.getMessageId())
+                    .messageId(message.getId())
                     .parent(toParentDTO(message.getParent()))
                     .content(message.getContent())
                     .transferredAt(message.getTransferredAt())
@@ -193,7 +193,7 @@ public class MessageService {
         }
 
         // 특정 학생과 연관된 메시지만 조회
-        List<Message> messages = messageRepository.findByStudent_StudentIdAndGuardian_Id(studentId, loggedInGuardian.getId());
+        List<Message> messages = messageRepository.findByStudent_IdAndGuardian_Id(studentId, loggedInGuardian.getId());
 
         // 메시지가 없는 경우 빈 리스트 반환
         if (messages.isEmpty()) {
@@ -208,7 +208,7 @@ public class MessageService {
 
         // 메시지 DTO 생성
         MessageDTO messageDTO = MessageDTO.builder()
-                .messageId(recentMessage.getMessageId())
+                .messageId(recentMessage.getId())
                 .parent(toParentDTO(recentMessage.getParent()))
                 .content(recentMessage.getContent())
                 .transferredAt(recentMessage.getTransferredAt())

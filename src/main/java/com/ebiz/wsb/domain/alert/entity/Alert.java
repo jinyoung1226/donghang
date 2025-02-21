@@ -23,11 +23,12 @@ import org.hibernate.annotations.DynamicInsert;
 @NoArgsConstructor
 @NotNull
 @DynamicInsert
-@Table(name = "alert")
+@Table(name = "Alert")
 public class Alert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "alert_id")
     private Long id;
 
     @Column(name = "receiver_id")
@@ -38,7 +39,7 @@ public class Alert {
     private UserType userType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category")
+    @Column(name = "alert_category")
     private AlertCategory alertCategory;
 
     @Column(name = "title")
@@ -65,9 +66,4 @@ public class Alert {
         END_WORK_PARENT,
         END_WORK_GUARDIAN
     }
-
-    public void read() {
-        isRead = true;
-    }
-
 }
