@@ -74,7 +74,7 @@ pipeline {
 					script {
 						echo "원격 서버에서 기존 컨테이너 종료"
                         sh """
-                        ssh -p ${DEPLOY_PORT} -i ${SSH_KEY} -o StrictHostKeyChecking=no ${DEPLOY_USERNAME}@${DEPLOY_IP} << EOF
+                        ssh -p ${DEPLOY_PORT} -i ${SSH_KEY} -o StrictHostKeyChecking=no ${DEPLOY_USERNAME}@${DEPLOY_IP} <<EOF
                         cd ${DEPLOY_DIR}
                         docker-compose down || true
                         EOF
@@ -95,7 +95,7 @@ pipeline {
 					script {
 						echo "푸시한 이미지 불러오기"
                         sh """
-                        ssh -p ${DEPLOY_PORT} -i ${SSH_KEY} -o StrictHostKeyChecking=no ${DEPLOY_USERNAME}@${DEPLOY_IP} << EOF
+                        ssh -p ${DEPLOY_PORT} -i ${SSH_KEY} -o StrictHostKeyChecking=no ${DEPLOY_USERNAME}@${DEPLOY_IP} <<EOF
                         cd ${DEPLOY_DIR}
                         docker-compose pull || exit 1
                         EOF
@@ -116,7 +116,7 @@ pipeline {
 					script {
 						echo "새로운 docker-compose.yml로 컨테이너 띄우기"
                         sh """
-                        ssh -p ${DEPLOY_PORT} -i ${SSH_KEY} -o StrictHostKeyChecking=no ${DEPLOY_USERNAME}@${DEPLOY_IP} << EOF
+                        ssh -p ${DEPLOY_PORT} -i ${SSH_KEY} -o StrictHostKeyChecking=no ${DEPLOY_USERNAME}@${DEPLOY_IP} <<EOF
                         cd ${DEPLOY_DIR}
                         docker-compose up --build -d || exit 1
                         EOF
