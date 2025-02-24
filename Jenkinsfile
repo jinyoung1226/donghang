@@ -1,6 +1,6 @@
 pipeline {
 	agent any
-	// 배포 테스트 2
+	// 배포 테스트 3
 	environment {
         IMAGE_NAME = 'jinyoung1226/donghang-back'
         DEPLOY_DIR = '/home/jinyoung/donghang'
