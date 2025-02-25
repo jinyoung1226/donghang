@@ -63,7 +63,23 @@ pipeline {
 			}
 		}
 
-		stage('07. 기존 docker-compose stop(SSH)') {
+		stage('07. 기존 이미지 삭제') {
+			steps {
+				script {
+					echo "기존 이미지 삭제"
+                    sh '''
+            		if [ "$(docker images -q donghang-back)" ]; then
+                		docker rmi -f $(docker images -q donghang-back)
+                		echo " donghang-back 이미지 삭제 완료"
+            		else
+                		echo " donghang-back 이미지가 존재하지 않습니다."
+            		fi
+            		'''
+				}
+			}
+		}
+
+		stage('08. 기존 docker-compose stop(SSH)') {
 			steps {
 				withCredentials([
 					sshUserPrivateKey(credentialsId: 'deploy-server-ssh', keyFileVariable: 'SSH_KEY'),
@@ -84,7 +100,7 @@ pipeline {
 			}
 		}
 
-		stage('08. 푸시한 이미지 불러오기') {
+		stage('09. 푸시한 이미지 불러오기') {
 			steps {
 				withCredentials([
 					sshUserPrivateKey(credentialsId: 'deploy-server-ssh', keyFileVariable: 'SSH_KEY'),
@@ -105,7 +121,7 @@ pipeline {
 			}
 		}
 
-		stage('09. 새로운 docker-compose.yml로 컨테이너 띄우기') {
+		stage('10. 새로운 docker-compose.yml로 컨테이너 띄우기') {
 			steps {
 				withCredentials([
 					sshUserPrivateKey(credentialsId: 'deploy-server-ssh', keyFileVariable: 'SSH_KEY'),

@@ -43,10 +43,12 @@ public class WaypointService {
     @Transactional(readOnly = true)
     public List<WaypointDTO> getWaypoints() {
         Object currentUser = authorizationHelper.getCurrentUser();
+        System.out.println(currentUser.toString());
 
         Group group;
         if (currentUser instanceof Guardian guardian) {
             group = guardian.getGroup();
+            System.out.println(group.getId());
             if (group == null) {
                 throw new GroupNotFoundException("그룹 정보를 찾을 수 없습니다.");
             }
