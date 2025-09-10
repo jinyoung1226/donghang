@@ -105,7 +105,7 @@ public class PushNotificationService {
      */
     private String getAccessToken() throws IOException {
 
-        String firebaseConfigPath = System.getenv("firebase.config.path");
+        String firebaseConfigPath = System.getenv("FIREBASE_CONFIG_PATH");
 
         if (firebaseConfigPath == null) {
             throw new IOException("Firebase config path environment variable not set");
