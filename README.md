@@ -20,7 +20,7 @@
 **🎥 서비스 소개 자료 및 영상 : https://buly.kr/CWuiumi**
 
 
----
+----
 
 ### ✅ 기획 배경 및 서비스 소개
 ![동행 기획 배경 및 서비스 소개1.png](Readme_assets/%EB%8F%99%ED%96%89%20%EA%B8%B0%ED%9A%8D%20%EB%B0%B0%EA%B2%BD%20%EB%B0%8F%20%EC%84%9C%EB%B9%84%EC%8A%A4%20%EC%86%8C%EA%B0%9C1.png)
